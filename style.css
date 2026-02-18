@@ -202,20 +202,44 @@ h2{
 .modal:target{ display: grid; place-items: center; }
 
 .modal-card{
-  width: min(1040px, 96vw);
-  max-height: 92vh;
+  width: min(880px, 92vw);   /* was 1040px / 96vw */
+  max-height: 86vh;          /* slightly smaller window */
   overflow: auto;
   background: var(--card);
   border: 1px solid rgba(0,0,0,0.25);
 }
 
+/* small links line under modal title */
+.modal-meta{
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.2;
+}
+
+.modal-meta a{
+  color: var(--muted);
+  border-bottom: 1px solid rgba(0,0,0,0.25);
+}
+.modal-meta a:hover{
+  color: var(--text);
+  border-bottom-color: rgba(0,0,0,0.55);
+}
+
+/* Make modal title area stack nicely */
 .modal-top{
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   padding: 14px 16px;
 }
+.modal-heading{
+  display: flex;
+  flex-direction: column;
+}
+
+
 
 .modal-top h2{
   margin: 0;
@@ -229,7 +253,11 @@ h2{
 }
 .close:hover{ color: var(--text); }
 
-.modal-body{ padding: 0 16px 16px; }
+
+.modal-body{
+  padding: 0 16px 16px;
+}
+
 .modal-media{ border: 1px solid var(--line); }
 
 /* Activities: subtler bullets */
@@ -253,7 +281,13 @@ footer{
 }
 
 /* Modal gallery (no JS) */
-.gallery { margin-top: 8px; }
+.gallery{
+  /* make gallery fill modal-body */
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 1fr auto; /* big image + thumbs */
+  gap: 12px;
+}
 
 .gallery input{
   position: absolute;
@@ -261,19 +295,80 @@ footer{
   pointer-events: none;
 }
 
-.big img{ display: none; width: 100%; height: auto; }
-
-/* thumbnails */
-.thumbs{
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 12px;
+/* SIDE THUMBNAILS LAYOUT */
+.viewer{
+  display: grid;
+  grid-template-columns: 72px 1fr; /* thumbs column + image */
+  gap: 12px;
+  align-items: start;
 }
 
+/* thumbs become vertical */
+.viewer .thumbs{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 10px;
+  margin-top: 0; /* remove top margin */
+}
+
+/* optional: keep thumbs visible while scrolling modal */
+.viewer .thumbs{
+  position: sticky;
+  top: 0;
+}
+
+/* your existing sizes can stay, but ensure these still apply */
+.viewer .thumbs label{
+  width: 62px;
+  height: 62px;
+}
+
+/* thumbs become a vertical stack */
+.thumbs{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-wrap: nowrap;  /* important: no wrapping */
+  margin-top: 0;      /* remove top margin */
+}
+
+/* optional: keep thumbs visible while scrolling the modal */
+.thumbs{
+  position: sticky;
+  top: 0;
+}
+
+/* on small screens, thumbs go back to bottom */
+@media (max-width: 640px){
+  .viewer{
+    grid-template-columns: 1fr;
+  }
+  .viewer .thumbs{
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: static;
+    margin-top: 12px;
+  }
+}
+
+
+.big{
+  background: #fff;           
+  display: flex;
+  justify-content: center;
+}
+
+.big img{
+  display: none;
+  width: auto;    /* scaled down instead of 100% */
+  height: min(450px);
+}
+
+
 .thumbs label{
-  width: 70px;
-  height: 70px;
+  width: 62px;
+  height: 62px;
   overflow: hidden;
   cursor: pointer;
   border: 1px solid var(--line);
@@ -287,13 +382,10 @@ footer{
   display: block;
 }
 
+
 /* subtle selected state */
 .gallery input:checked + label{
   border-color: rgba(0,0,0,0.55);
 }
 
-.big img{ display:none; width:100%; height:auto; }
-.thumbs{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-.thumbs label{ width:70px; height:70px; overflow:hidden; cursor:pointer; border:1px solid var(--line); }
-.thumbs img{ width:100%; height:100%; object-fit:cover; display:block; }
 
